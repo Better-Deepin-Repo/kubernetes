@@ -1,0 +1,3 @@
+_output/bin/kube-apiserver usr/bin/
+_output/bin/kube-scheduler usr/bin/
+_output/bin/kube-controller-manager usr/bin/

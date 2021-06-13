@@ -1,0 +1,5 @@
+manpage-has-bad-whatis-entry usr/share/man/*
+manpage-has-errors-from-man usr/share/man/*
+statically-linked-binary usr/bin/kube-apiserver
+statically-linked-binary usr/bin/kube-controller-manager
+statically-linked-binary usr/bin/kube-scheduler

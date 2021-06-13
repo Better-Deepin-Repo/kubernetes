@@ -1,0 +1,20 @@
+Source: kubernetes
+Section: admin
+Priority: optional
+Maintainer: Janos Lenart <ocsi@debian.org>
+Build-Depends: debhelper (>= 12~), bash-completion, golang-1.15-go, jq, rsync
+Standards-Version: 4.5.0
+Homepage: http://kubernetes.io/
+
+Package: kubernetes-client
+Architecture: amd64 i386 armel armhf arm64 s390x
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Pre-Depends: ${misc:Pre-Depends}
+Description: Kubernetes client binary (kubectl)
+ Kubernetes is a portable, extensible, open-source platform for managing
+ containerized workloads and services, that facilitates both declarative
+ configuration and automation. It has a large, rapidly growing ecosystem.
+ Kubernetes services, support, and tools are widely available.
+ .
+ Currently this package only ships the kubectl binary. Configuration
+ (via kubeconfig) will has to be created via other means.

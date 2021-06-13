@@ -1,0 +1,29 @@
+#!/usr/bin/make -f
+
+export DH_VERBOSE = 1
+export GOPATH = $(CURDIR)/.go
+export PATH := /usr/lib/go-1.15/bin:$(PATH)
+export CGO_ENABLED = 0
+
+%:
+	dh $@ --with=bash-completion
+
+bins = $(shell cut -d " " -f1 debian/*.install | grep "_output/bin" | xargs --max-args=1 basename)
+override_dh_auto_build:
+	mkdir -p .go/src/k8s.io
+	[ -L .go/src/k8s.io/kubernetes ] || ln -s ../../.. .go/src/k8s.io/kubernetes
+	env HOME=/home/user make WHAT="$(addprefix cmd/,$(bins) genman)"
+	# bash completion
+	mkdir -p _output/bash-completion
+	_output/bin/kubectl completion bash >_output/bash-completion/kubectl
+	# manpages
+	mkdir -p _output/man
+	echo $(bins) | xargs --max-args=1 env HOME=/home/user _output/bin/genman _output/man
+	# NOTICE files
+	find vendor -name '*NOTICE*' -print0 | xargs -0 head -n1000 >_output/NOTICE
+
+override_dh_installchangelogs:
+	dh_installchangelogs -X CHANGELOG.md CHANGELOG/CHANGELOG-*.md
+
+override_dh_dwz:
+override_dh_auto_test:

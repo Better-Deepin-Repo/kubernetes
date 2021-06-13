@@ -1,0 +1,35 @@
+Kubernetes packages in Debian
+=============================
+
+This Debian package is a WIP. It was released with the hope of being useful even
+in its current state. Suggestions are very much welcome on how to improve it! :)
+
+It is far from being perfect, or even complete. There are many interesting
+avenues left to explored. For example: How much of the bootstrapping should be
+automated in Debian? How to achieve that in a customizable way? How to support
+the multitude of possible configurations? HA? What about different network
+plugins and container runtimes? The list goes on.
+
+Eventually, it might be best to have kubectl, kubeadm and kubelet in Debian and
+defer many of the questions above to kubeadm. At the moment kubeadm is not built
+and kubelet is not available as a standalone package. The plan is to go in this
+direction, but still leave the current kubernetes-{node,master} packages for
+those who would like to run these components directly from systemd.
+
+These packages are built from the heavily original source tree, as is.
+There was a heated discussion around the extreme vendoring:
+https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=971515
+
+Copyright
+---------
+
+The legal status of Kubernetes is complex to say the least. Much effort was done
+to check the license of every single dependency in vendor/ (see the copyright
+file). To my best knowleadge these are all in line with the DFSG. If you have a
+well founded doubt please contact me immediately. If at all possible it would be
+best to keep using the verbatim .orig.tar.gz files as they are released by the
+Kubernetes developers.
+
+The debian/copyright file was written by Dora Anna Lenart <volgyesi@gmail.com>
+
+ -- Janos Lenart <ocsi@debian.org>  21 Mar 2020

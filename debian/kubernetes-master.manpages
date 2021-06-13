@@ -1,0 +1,3 @@
+_output/man/kube-apiserver*
+_output/man/kube-scheduler*
+_output/man/kube-controller-manager*

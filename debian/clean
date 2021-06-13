@@ -1,0 +1,4 @@
+.go/
+obj-x86_64-linux-gnu/
+pkg/generated/openapi/zz_generated.*
+.dockerized-kube-version-defs
