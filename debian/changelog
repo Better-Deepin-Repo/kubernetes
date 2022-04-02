@@ -1,3 +1,10 @@
+kubernetes (1.20.5+really1.20.2-1.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Build using golang-go (Closes: #1000980)
+
+ -- Florian Ernst <florian@debian.org>  Sat, 02 Apr 2022 16:49:13 +0200
+
 kubernetes (1.20.5+really1.20.2-1) unstable; urgency=medium
 
   * This is actually still 1.20.2

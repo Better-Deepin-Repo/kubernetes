@@ -2,7 +2,7 @@ Source: kubernetes
 Section: admin
 Priority: optional
 Maintainer: Janos Lenart <ocsi@debian.org>
-Build-Depends: debhelper (>= 12~), bash-completion, golang-1.15-go, jq, rsync
+Build-Depends: debhelper (>= 12~), bash-completion, golang-go, jq, rsync
 Standards-Version: 4.5.0
 Homepage: http://kubernetes.io/
 
