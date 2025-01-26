@@ -1,2 +1,6 @@
 version=4
-https://github.com/kubernetes/kubernetes/releases /kubernetes/kubernetes/archive/v([^-]+).tar.gz
+opts="searchmode=plain,\
+      filenamemangle=s%(?:.*?)?v?(\d[\d.]*)\.tar\.gz%@PACKAGE@-$1.tar.gz%,\
+      repacksuffix=+ds,dversionmangle=s/\+ds//,repack,compression=gz" \
+https://api.github.com/repos/kubernetes/kubernetes/tags?per_page=50 \
+https://api.github.com/repos/kubernetes/kubernetes/tarball/refs/tags/(?:[v]?(1\.\d+\.\d+))(?![-a-zA-Z])
