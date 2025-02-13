@@ -1,0 +1,90 @@
+From: Arthur Diniz <arthurbdiniz@gmail.com>
+Date: Sun, 26 Jan 2025 14:29:01 +0000
+Subject: Bump evanphx json-patch library to v5
+
+Forwarded: not-needed
+Description: There has been an effort from upstream to bump json-patch to v5,
+ but progress is slow due to potential breaking changes.
+ Since v5 is already packaged in Debian, we need this patch to update the Go
+ module path for this library.
+ https://github.com/kubernetes/kubernetes/pull/129855
+---
+ staging/src/k8s.io/kubectl/pkg/cmd/annotate/annotate.go       | 2 +-
+ staging/src/k8s.io/kubectl/pkg/cmd/label/label.go             | 2 +-
+ staging/src/k8s.io/kubectl/pkg/cmd/patch/patch.go             | 2 +-
+ staging/src/k8s.io/kubectl/pkg/cmd/util/editor/editoptions.go | 2 +-
+ staging/src/k8s.io/kubectl/pkg/cmd/util/helpers.go            | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/staging/src/k8s.io/kubectl/pkg/cmd/annotate/annotate.go b/staging/src/k8s.io/kubectl/pkg/cmd/annotate/annotate.go
+index 63aa86b..01a13bc 100644
+--- a/staging/src/k8s.io/kubectl/pkg/cmd/annotate/annotate.go
++++ b/staging/src/k8s.io/kubectl/pkg/cmd/annotate/annotate.go
+@@ -21,8 +21,8 @@ import (
+ 	"fmt"
+ 	"io"
+ 
++	jsonpatch "github.com/evanphx/json-patch/v5"
+ 	"github.com/spf13/cobra"
+-	jsonpatch "gopkg.in/evanphx/json-patch.v4"
+ 	"k8s.io/klog/v2"
+ 
+ 	"k8s.io/apimachinery/pkg/api/meta"
+diff --git a/staging/src/k8s.io/kubectl/pkg/cmd/label/label.go b/staging/src/k8s.io/kubectl/pkg/cmd/label/label.go
+index 269e8e1..d53756b 100644
+--- a/staging/src/k8s.io/kubectl/pkg/cmd/label/label.go
++++ b/staging/src/k8s.io/kubectl/pkg/cmd/label/label.go
+@@ -21,8 +21,8 @@ import (
+ 	"reflect"
+ 	"strings"
+ 
++	jsonpatch "github.com/evanphx/json-patch/v5"
+ 	"github.com/spf13/cobra"
+-	jsonpatch "gopkg.in/evanphx/json-patch.v4"
+ 	"k8s.io/klog/v2"
+ 
+ 	"k8s.io/apimachinery/pkg/api/meta"
+diff --git a/staging/src/k8s.io/kubectl/pkg/cmd/patch/patch.go b/staging/src/k8s.io/kubectl/pkg/cmd/patch/patch.go
+index 594e9d0..96f7bb3 100644
+--- a/staging/src/k8s.io/kubectl/pkg/cmd/patch/patch.go
++++ b/staging/src/k8s.io/kubectl/pkg/cmd/patch/patch.go
+@@ -22,9 +22,9 @@ import (
+ 	"reflect"
+ 	"strings"
+ 
++	jsonpatch "github.com/evanphx/json-patch/v5"
+ 	"github.com/pkg/errors"
+ 	"github.com/spf13/cobra"
+-	jsonpatch "gopkg.in/evanphx/json-patch.v4"
+ 	"k8s.io/klog/v2"
+ 
+ 	apierrors "k8s.io/apimachinery/pkg/api/errors"
+diff --git a/staging/src/k8s.io/kubectl/pkg/cmd/util/editor/editoptions.go b/staging/src/k8s.io/kubectl/pkg/cmd/util/editor/editoptions.go
+index 2f60808..525ca76 100644
+--- a/staging/src/k8s.io/kubectl/pkg/cmd/util/editor/editoptions.go
++++ b/staging/src/k8s.io/kubectl/pkg/cmd/util/editor/editoptions.go
+@@ -29,8 +29,8 @@ import (
+ 	goruntime "runtime"
+ 	"strings"
+ 
++	jsonpatch "github.com/evanphx/json-patch/v5"
+ 	"github.com/spf13/cobra"
+-	jsonpatch "gopkg.in/evanphx/json-patch.v4"
+ 	"k8s.io/klog/v2"
+ 
+ 	corev1 "k8s.io/api/core/v1"
+diff --git a/staging/src/k8s.io/kubectl/pkg/cmd/util/helpers.go b/staging/src/k8s.io/kubectl/pkg/cmd/util/helpers.go
+index bd291a8..7c979c4 100644
+--- a/staging/src/k8s.io/kubectl/pkg/cmd/util/helpers.go
++++ b/staging/src/k8s.io/kubectl/pkg/cmd/util/helpers.go
+@@ -27,9 +27,9 @@ import (
+ 	"strings"
+ 	"time"
+ 
++	jsonpatch "github.com/evanphx/json-patch/v5"
+ 	"github.com/spf13/cobra"
+ 	"github.com/spf13/pflag"
+-	jsonpatch "gopkg.in/evanphx/json-patch.v4"
+ 
+ 	apierrors "k8s.io/apimachinery/pkg/api/errors"
+ 	"k8s.io/apimachinery/pkg/api/meta"
