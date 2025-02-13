@@ -1,7 +1,7 @@
 Source: kubernetes
 Section: admin
 Priority: optional
-Maintainer: Janos Lenart <ocsi@debian.org>
+Maintainer: Debian Kubernetes Packaging Team <team+kubernetes@tracker.debian.org>
 Build-Depends: debhelper (>= 12~), bash-completion, golang-go, jq, rsync
 Standards-Version: 4.5.0
 Homepage: http://kubernetes.io/
