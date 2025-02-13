@@ -115,6 +115,7 @@ Files: debian/*
 Copyright: 2020 Janos Lenart <ocsi@debian.org>
            2025 Arthur Diniz <arthurbdiniz@gmail.com>
 License: Apache-2.0
+Comment: Debian packaging is licensed under the same terms as upstream
 
 License: Apache-2.0
   Licensed under the Apache License, Version 2.0 (the "License");
