@@ -74,6 +74,43 @@ Files: *
 Copyright: 2014-2024 The Kubernetes Authors
 License: Apache-2.0
 
+Files: staging/src/k8s.io/kubectl/pkg/util/i18n/translations/test/default/LC_MESSAGES/k8s.po
+       staging/src/k8s.io/kubectl/pkg/util/i18n/translations/test/en_US/LC_MESSAGES/k8s.po
+       staging/src/k8s.io/kubectl/pkg/util/i18n/translations/kubectl/default/LC_MESSAGES/k8s.po
+       staging/src/k8s.io/kubectl/pkg/util/i18n/translations/kubectl/en_US/LC_MESSAGES/k8s.po
+       staging/src/k8s.io/kubectl/pkg/util/i18n/translations/kubectl/fr_FR/LC_MESSAGES/k8s.po
+Copyright: 2016 brendan.d.burns@gmail.com
+License: Apache-2.0
+
+Files: staging/src/k8s.io/kubectl/pkg/util/i18n/translations/kubectl/zh_CN/LC_MESSAGES/k8s.po
+Copyright: 2017 shiywang@redhat.com
+           2017 zhengjiajin@caicloud.io
+License: Apache-2.0
+
+Files: staging/src/k8s.io/kubectl/pkg/util/i18n/translations/kubectl/zh_TW/LC_MESSAGES/k8s.po
+Copyright: 2017 warmchang@outlook.com
+License: Apache-2.0
+
+Files: staging/src/k8s.io/kubectl/pkg/util/i18n/translations/kubectl/ja_JP/LC_MESSAGES/k8s.po
+Copyright: 2017 girikuncoro@gmail.com
+License: Apache-2.0
+
+Files: staging/src/k8s.io/kubectl/pkg/util/i18n/translations/kubectl/it_IT/LC_MESSAGES/k8s.po
+Copyright: 2017 evolution85@gmail.com
+License: Apache-2.0
+
+Files: staging/src/k8s.io/kubectl/pkg/util/i18n/translations/kubectl/de_DE/LC_MESSAGES/k8s.po
+Copyright: 2017 steffenschmitz@hotmail.de
+License: Apache-2.0
+
+Files: staging/src/k8s.io/kubectl/pkg/util/i18n/translations/kubectl/ko_KR/LC_MESSAGES/k8s.po
+Copyright: 2018 ianyrchoi@gmail.com
+License: Apache-2.0
+
+Files: staging/src/k8s.io/kubectl/pkg/util/i18n/translations/kubectl/pt_BR/LC_MESSAGES/k8s.po
+Copyright: 2020 ctadeu@gmail.com
+License: Apache-2.0
+
 Files: debian/*
 Copyright: 2020 Janos Lenart <ocsi@debian.org>
            2025 Arthur Diniz <arthurbdiniz@gmail.com>
