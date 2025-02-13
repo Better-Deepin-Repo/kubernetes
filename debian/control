@@ -55,6 +55,27 @@ Vcs-Git: https://salsa.debian.org/kubernetes-team/packages/kubernetes.git
 Rules-Requires-Root: no
 XS-Go-Import-Path: k8s.io/kubernetes
 
+Package: kubectl
+Architecture: any
+Breaks: kubernetes-client (<< 1.31.4~)
+Replaces: kubernetes-client (<< 1.31.4~)
+Static-Built-Using: ${misc:Static-Built-Using}
+Depends: ${misc:Depends},
+         ${shlibs:Depends}
+Description: Command-line tool for controlling Kubernetes clusters
+ The official command-line tool for interacting with Kubernetes clusters.
+ .
+ It allows users to manage and configure Kubernetes resources, deploy
+ applications, inspect and troubleshoot workloads, and automate cluster
+ operations.
+ .
+ With kubectl, you can perform actions such as scaling deployments, rolling
+ out updates, debugging services, and viewing cluster logs.
+ .
+ The tool supports a wide range of commands for managing pods, nodes, services,
+ config maps, persistent volumes, and more. It also integrates with custom
+ plugins and supports client-side filtering and resource scripting for advanced
+ use cases.
 Package: kubernetes-client
 Architecture: amd64 i386 armel armhf arm64 s390x
 Depends: ${shlibs:Depends}, ${misc:Depends}
