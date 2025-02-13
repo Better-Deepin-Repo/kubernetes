@@ -32,3 +32,12 @@ override_dh_installchangelogs:
 
 override_dh_dwz:
 override_dh_auto_test:
+
+ifeq (,$(filter nodoc,$(DEB_BUILD_PROFILES)))
+execute_before_dh_installman-arch:
+	help2man debian/kubectl/usr/bin/kubectl \
+		--no-info --no-discard-stderr \
+		--version-string="$(GIT_VERSION)" \
+		-n "Command-line tool for interacting with a Kubernetes cluster's control plane" > debian/kubectl.1
+endif
+
