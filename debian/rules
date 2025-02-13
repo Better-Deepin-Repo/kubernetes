@@ -11,7 +11,7 @@ include /usr/share/dpkg/pkg-info.mk
 
 
 %:
-	dh $@ --with=bash-completion
+	dh $@ --builddirectory=_build --buildsystem=golang
 
 bins = $(shell cut -d " " -f1 debian/*.install | grep "_output/bin" | xargs --max-args=1 basename)
 override_dh_auto_build:
