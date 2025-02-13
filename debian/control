@@ -2,7 +2,6 @@ Source: kubernetes
 Section: admin
 Priority: optional
 Maintainer: Debian Kubernetes Packaging Team <team+kubernetes@tracker.debian.org>
-Standards-Version: 4.5.0
 Homepage: http://kubernetes.io/
 Uploaders: Arthur Diniz <arthurbdiniz@gmail.com>,
            Janos Lenart <ocsi@debian.org>
@@ -50,6 +49,7 @@ Build-Depends: debhelper-compat (= 13),
                golang-k8s-utils-dev,
                curl <!nocheck> | wget <!nocheck>,
                help2man <!nodoc>
+Standards-Version: 4.7.2
 
 Package: kubernetes-client
 Architecture: amd64 i386 armel armhf arm64 s390x
