@@ -1,3 +1,82 @@
+kubernetes (1.31.4+ds-1) UNRELEASED; urgency=medium
+
+  * New upstream version 1.31.4+ds (Closes: #1055411)
+    - Fix CVE-2021-25743: ANSI escape characters in kubectl output are not
+      being filtered (Closes: #1016441)
+    - Fix CVE-2020-8554: Kubernetes API server man in the middle using
+      LoadBalancer or ExternalIPs (Closes: #990793)
+      ~ The version 1.20.5+really1.20.2-1 used to contain the vulnerability's
+        source code, but we removed it during the repack. The binary package
+        was not affected
+    - Repack to remove all source non related to kubectl (Closes: #1047881)
+      ~ Remove folders cmd, staging, hack, docs, third_party and vendor
+    - Fix bug #990793 related to config use-context command segfaults from
+      kubernetes-client (kubectl). The autopkgtest d/t/kubectl.sh is covering
+      that scenario. (Closes: #990793)
+  * d/clean: Remove file after upstream repack cleanup
+  * d/compat: Remove obsolete file in favor of debhelper-compat
+  * d/control:
+    - Add dh-exec to Build-Depends
+    - Add Uploaders field
+    - Bump debhelper-compat to 13
+    - Bump Standards-Version to 4.7.2
+    - Create new binary package kubectl to replace kubernetes-client
+    - Declare Rules-Requires-Root to no
+    - Export kubectl library dev files to new binary
+    - Replace current maintainer to Kubernetes Team
+    - Reorder Homepage field and change schema to https
+    - Set Vcs-* fields to Kubernetes team Salsa group (Closes: #1086756)
+    - Set XS-Go-Import-Path to k8s.io/kubernetes
+    - Set kubernetes-client to transitional package
+    - Update Build-Depends for the unvendorized build
+  * d/copyright:
+    - Add comment to debian/*
+    - Add Files-Excluded
+    - Bump upstream copyright years to 2014-2024
+    - Declare Arthur Diniz 2025 debian copyright
+    - Declare copyright for authors under translations folder
+    - Format Apache-2.0 License content body
+  * d/gbp.conf: Create file with dist DEP14 and debian/sid branch
+  * d/golang-k8s-kubectl-dev.install: Add installation file for Go source
+    directory
+  * d/kubectl.install:
+    - Handle cross-build for completions
+    - Install kubectl and shell completion files (Closes: #994438)
+  * d/kubectl.lintian-overrides: Silence unknown-field Static-Built-Using
+  * d/kubectl.manpages: Install kubectl manpage
+  * d/kubernetes-client*: Remove deprecated binary related files
+  * d/kubernetes-master*: Remove deprecated binary related files
+  * d/kubernetes-node*: Remove deprecated binary related files
+  * d/p/*:
+    - Bump evanphx json-patch library to v5
+    - Set LANGUAGE env variable for TestDiffProgram
+  * d/r/lintian-overrides: silence debhelper-but-no-misc-depends for
+    kubernetes-client
+  * d/rules:
+    - Build with -buildmode=pie (except on mipsel or mips64el)
+    - Define version metadata and LDFLAGS variables
+    - Disable DH_VERBOSE by commenting it
+    - Generate manpages using help2man in before_dh_installman
+    - Include dpkg default.mk
+    - Include dpkg pkg-info.mk
+    - Override dh_auto_configure to prepare Go build environment manually
+    - Override dh_auto_install to skip dh_golang and handle completions
+    - Remove empty override override_dh_dwz
+    - Remove PATH and CGO_ENABLED variables
+    - Re-enable dh_auto_test by removing empty override
+    - Set build directory and system to golang
+    - Set DH_GOPKG and DH_GOLANG_BUILDPKG variables for kubectl
+    - Set GOPATH to _build directory
+    - Simplify override_dh_auto_build and delegate to dh_auto_build
+  * d/salsa-ci.yml: Include pkg-go-tools pipeline
+  * d/s/lintian-overrides: Silence missing Built-Using field for kubectl and
+    kubernetes-client
+  * d/tests/*: Initial autopkgtest suite
+  * d/u/metadata: Declared upstream metadata information
+  * d/watch: Use GitHub API and filter only versions like v1.*.*
+
+ -- Arthur Diniz <arthurbdiniz@gmail.com>  Thu, 13 Feb 2025 23:44:44 +0000
+
 kubernetes (1.20.5+really1.20.2-1.1) unstable; urgency=medium
 
   * Non-maintainer upload.
@@ -102,7 +181,7 @@ kubernetes (1.17.4-1) unstable; urgency=high
     - Not shipping systemd units for kubelet and kube-proxy for now
   * kubernetes-master
     - Moved etcd from Depends into Recommends as apiserver can also connect to
-      a remote etcd/cluster.      
+      a remote etcd/cluster.
     - Not shipping systemd units for kube-apiserver, kube-schedules and
       kube-controller-manager for now
 
