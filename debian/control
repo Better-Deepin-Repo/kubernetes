@@ -50,6 +50,8 @@ Build-Depends: debhelper-compat (= 13),
                help2man <!nodoc>
 Standards-Version: 4.7.2
 Homepage: https://kubernetes.io/
+Vcs-Browser: https://salsa.debian.org/kubernetes-team/packages/kubernetes
+Vcs-Git: https://salsa.debian.org/kubernetes-team/packages/kubernetes.git
 
 Package: kubernetes-client
 Architecture: amd64 i386 armel armhf arm64 s390x
