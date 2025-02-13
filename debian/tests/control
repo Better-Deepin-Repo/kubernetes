@@ -1,0 +1,9 @@
+Tests: kubectl.sh
+Depends: ca-certificates,
+         docker-cli,
+         docker.io,
+         kind,
+         kubectl
+Restrictions: isolation-machine,
+              needs-internet,
+              needs-root
