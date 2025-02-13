@@ -5,6 +5,8 @@ Maintainer: Debian Kubernetes Packaging Team <team+kubernetes@tracker.debian.org
 Build-Depends: debhelper (>= 12~), bash-completion, golang-go, jq, rsync
 Standards-Version: 4.5.0
 Homepage: http://kubernetes.io/
+Uploaders: Arthur Diniz <arthurbdiniz@gmail.com>,
+           Janos Lenart <ocsi@debian.org>
 
 Package: kubernetes-client
 Architecture: amd64 i386 armel armhf arm64 s390x
