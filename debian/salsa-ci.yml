@@ -1,0 +1,5 @@
+# TODO: Contact go team to request access to team tagged CI runners before using their pipeline.
+# https://salsa.debian.org/go-team/infra/pkg-go-tools/blob/master/config/gitlabciyml.go
+---
+include:
+  - https://salsa.debian.org/salsa-ci-team/pipeline/raw/master/recipes/debian.yml
