@@ -30,7 +30,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/intstr"
 	"k8s.io/apimachinery/pkg/util/validation"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
-	"k8s.io/cli-runtime/pkg/resource"
+	"k8s.io/cli-runtime/pkg/genericiooptions"
 	corev1client "k8s.io/client-go/kubernetes/typed/core/v1"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
 	"k8s.io/kubectl/pkg/scheme"
@@ -41,12 +41,12 @@ import (
 )
 
 // NewCmdCreateService is a macro command to create a new service
-func NewCmdCreateService(f cmdutil.Factory, ioStreams genericclioptions.IOStreams) *cobra.Command {
+func NewCmdCreateService(f cmdutil.Factory, ioStreams genericiooptions.IOStreams) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "service",
 		Aliases: []string{"svc"},
-		Short:   i18n.T("Create a service using specified subcommand."),
-		Long:    i18n.T("Create a service using specified subcommand."),
+		Short:   i18n.T("Create a service using a specified subcommand"),
+		Long:    i18n.T("Create a service using a specified subcommand."),
 		Run:     cmdutil.DefaultSubCommandRun(ioStreams.ErrOut),
 	}
 	cmd.AddCommand(NewCmdCreateServiceClusterIP(f, ioStreams))
@@ -72,15 +72,16 @@ type ServiceOptions struct {
 	FieldManager     string
 	CreateAnnotation bool
 	Namespace        string
+	EnforceNamespace bool
 
-	Client         corev1client.CoreV1Interface
-	DryRunStrategy cmdutil.DryRunStrategy
-	DryRunVerifier *resource.DryRunVerifier
-	genericclioptions.IOStreams
+	Client              corev1client.CoreV1Interface
+	DryRunStrategy      cmdutil.DryRunStrategy
+	ValidationDirective string
+	genericiooptions.IOStreams
 }
 
 // NewServiceOptions creates a ServiceOptions struct
-func NewServiceOptions(ioStreams genericclioptions.IOStreams, serviceType corev1.ServiceType) *ServiceOptions {
+func NewServiceOptions(ioStreams genericiooptions.IOStreams, serviceType corev1.ServiceType) *ServiceOptions {
 	return &ServiceOptions{
 		PrintFlags: genericclioptions.NewPrintFlags("created").WithTypeSetter(scheme.Scheme),
 		IOStreams:  ioStreams,
@@ -105,7 +106,7 @@ func (o *ServiceOptions) Complete(f cmdutil.Factory, cmd *cobra.Command, args []
 		return err
 	}
 
-	o.Namespace, _, err = f.ToRawKubeConfigLoader().Namespace()
+	o.Namespace, o.EnforceNamespace, err = f.ToRawKubeConfigLoader().Namespace()
 	if err != nil {
 		return err
 	}
@@ -114,15 +115,6 @@ func (o *ServiceOptions) Complete(f cmdutil.Factory, cmd *cobra.Command, args []
 	if err != nil {
 		return err
 	}
-	dynamicClient, err := f.DynamicClient()
-	if err != nil {
-		return err
-	}
-	discoveryClient, err := f.ToDiscoveryClient()
-	if err != nil {
-		return err
-	}
-	o.DryRunVerifier = resource.NewDryRunVerifier(dynamicClient, discoveryClient)
 	cmdutil.PrintFlagsWithDryRunStrategy(o.PrintFlags, o.DryRunStrategy)
 
 	printer, err := o.PrintFlags.ToPrinter()
@@ -132,6 +124,11 @@ func (o *ServiceOptions) Complete(f cmdutil.Factory, cmd *cobra.Command, args []
 
 	o.PrintObj = func(obj runtime.Object) error {
 		return printer.PrintObj(obj, o.Out)
+	}
+
+	o.ValidationDirective, err = cmdutil.GetValidationDirective(cmd)
+	if err != nil {
+		return err
 	}
 
 	return nil
@@ -177,13 +174,19 @@ func (o *ServiceOptions) createService() (*corev1.Service, error) {
 	selector := map[string]string{}
 	selector["app"] = o.Name
 
+	namespace := ""
+	if o.EnforceNamespace {
+		namespace = o.Namespace
+	}
+
 	service := corev1.Service{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:   o.Name,
-			Labels: labels,
+			Name:      o.Name,
+			Labels:    labels,
+			Namespace: namespace,
 		},
 		Spec: corev1.ServiceSpec{
-			Type:         corev1.ServiceType(o.Type),
+			Type:         o.Type,
 			Selector:     selector,
 			Ports:        ports,
 			ExternalName: o.ExternalName,
@@ -211,6 +214,7 @@ func (o *ServiceOptions) Run() error {
 		if o.FieldManager != "" {
 			createOptions.FieldManager = o.FieldManager
 		}
+		createOptions.FieldValidation = o.ValidationDirective
 		if o.DryRunStrategy == cmdutil.DryRunServer {
 			createOptions.DryRun = []string{metav1.DryRunAll}
 		}
@@ -236,13 +240,13 @@ var (
 )
 
 // NewCmdCreateServiceClusterIP is a command to create a ClusterIP service
-func NewCmdCreateServiceClusterIP(f cmdutil.Factory, ioStreams genericclioptions.IOStreams) *cobra.Command {
+func NewCmdCreateServiceClusterIP(f cmdutil.Factory, ioStreams genericiooptions.IOStreams) *cobra.Command {
 	o := NewServiceOptions(ioStreams, corev1.ServiceTypeClusterIP)
 
 	cmd := &cobra.Command{
 		Use:                   "clusterip NAME [--tcp=<port>:<targetPort>] [--dry-run=server|client|none]",
 		DisableFlagsInUseLine: true,
-		Short:                 i18n.T("Create a ClusterIP service."),
+		Short:                 i18n.T("Create a ClusterIP service"),
 		Long:                  serviceClusterIPLong,
 		Example:               serviceClusterIPExample,
 		Run: func(cmd *cobra.Command, args []string) {
@@ -274,13 +278,13 @@ var (
 )
 
 // NewCmdCreateServiceNodePort is a macro command for creating a NodePort service
-func NewCmdCreateServiceNodePort(f cmdutil.Factory, ioStreams genericclioptions.IOStreams) *cobra.Command {
+func NewCmdCreateServiceNodePort(f cmdutil.Factory, ioStreams genericiooptions.IOStreams) *cobra.Command {
 	o := NewServiceOptions(ioStreams, corev1.ServiceTypeNodePort)
 
 	cmd := &cobra.Command{
 		Use:                   "nodeport NAME [--tcp=port:targetPort] [--dry-run=server|client|none]",
 		DisableFlagsInUseLine: true,
-		Short:                 i18n.T("Create a NodePort service."),
+		Short:                 i18n.T("Create a NodePort service"),
 		Long:                  serviceNodePortLong,
 		Example:               serviceNodePortExample,
 		Run: func(cmd *cobra.Command, args []string) {
@@ -311,13 +315,13 @@ var (
 )
 
 // NewCmdCreateServiceLoadBalancer is a macro command for creating a LoadBalancer service
-func NewCmdCreateServiceLoadBalancer(f cmdutil.Factory, ioStreams genericclioptions.IOStreams) *cobra.Command {
+func NewCmdCreateServiceLoadBalancer(f cmdutil.Factory, ioStreams genericiooptions.IOStreams) *cobra.Command {
 	o := NewServiceOptions(ioStreams, corev1.ServiceTypeLoadBalancer)
 
 	cmd := &cobra.Command{
 		Use:                   "loadbalancer NAME [--tcp=port:targetPort] [--dry-run=server|client|none]",
 		DisableFlagsInUseLine: true,
-		Short:                 i18n.T("Create a LoadBalancer service."),
+		Short:                 i18n.T("Create a LoadBalancer service"),
 		Long:                  serviceLoadBalancerLong,
 		Example:               serviceLoadBalancerExample,
 		Run: func(cmd *cobra.Command, args []string) {
@@ -351,13 +355,13 @@ var (
 )
 
 // NewCmdCreateServiceExternalName is a macro command for creating an ExternalName service
-func NewCmdCreateServiceExternalName(f cmdutil.Factory, ioStreams genericclioptions.IOStreams) *cobra.Command {
+func NewCmdCreateServiceExternalName(f cmdutil.Factory, ioStreams genericiooptions.IOStreams) *cobra.Command {
 	o := NewServiceOptions(ioStreams, corev1.ServiceTypeExternalName)
 
 	cmd := &cobra.Command{
 		Use:                   "externalname NAME --external-name external.name [--dry-run=server|client|none]",
 		DisableFlagsInUseLine: true,
-		Short:                 i18n.T("Create an ExternalName service."),
+		Short:                 i18n.T("Create an ExternalName service"),
 		Long:                  serviceExternalNameLong,
 		Example:               serviceExternalNameExample,
 		Run: func(cmd *cobra.Command, args []string) {
@@ -384,24 +388,25 @@ func parsePorts(portString string) (int32, intstr.IntOrString, error) {
 
 	port, err := utilsnet.ParsePort(portStringSlice[0], true)
 	if err != nil {
-		return 0, intstr.FromInt(0), err
+		return 0, intstr.FromInt32(0), err
 	}
 
 	if len(portStringSlice) == 1 {
-		return int32(port), intstr.FromInt(int(port)), nil
+		port32 := int32(port)
+		return port32, intstr.FromInt32(port32), nil
 	}
 
 	var targetPort intstr.IntOrString
 	if portNum, err := strconv.Atoi(portStringSlice[1]); err != nil {
 		if errs := validation.IsValidPortName(portStringSlice[1]); len(errs) != 0 {
-			return 0, intstr.FromInt(0), fmt.Errorf(strings.Join(errs, ","))
+			return 0, intstr.FromInt32(0), fmt.Errorf(strings.Join(errs, ","))
 		}
 		targetPort = intstr.FromString(portStringSlice[1])
 	} else {
 		if errs := validation.IsValidPortNum(portNum); len(errs) != 0 {
-			return 0, intstr.FromInt(0), fmt.Errorf(strings.Join(errs, ","))
+			return 0, intstr.FromInt32(0), fmt.Errorf(strings.Join(errs, ","))
 		}
-		targetPort = intstr.FromInt(portNum)
+		targetPort = intstr.FromInt32(int32(portNum))
 	}
 	return int32(port), targetPort, nil
 }

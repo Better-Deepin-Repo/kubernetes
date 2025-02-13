@@ -1,17 +1,24 @@
 # See the OWNERS docs at https://go.k8s.io/owners
 
+options:
+  # make root approval non-recursive
+  no_parent_owners: true
 reviewers:
-  - castrojo
+  - alisondy
   - cblecker
   - guineveresaenger
-  - justaugustus
   - mrbobbytables
   - nikhita
   - parispittman
+  - palnabarun
+  - kaslin
+  - MadhavJivrajani
+  - Priyankasaggu11929
 approvers:
-  - sig-contribex-approvers
+  - sig-contributor-experience-approvers
   - parispittman
 emeritus_approvers:
+  - castrojo
   - Phillels
 labels:
   - sig/contributor-experience
