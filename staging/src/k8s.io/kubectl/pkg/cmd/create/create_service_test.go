@@ -19,10 +19,14 @@ package create
 import (
 	"testing"
 
+	restclient "k8s.io/client-go/rest"
+	cmdtesting "k8s.io/kubectl/pkg/cmd/testing"
+
 	v1 "k8s.io/api/core/v1"
 	apiequality "k8s.io/apimachinery/pkg/api/equality"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
+	"k8s.io/cli-runtime/pkg/genericiooptions"
 )
 
 func TestCreateServices(t *testing.T) {
@@ -265,5 +269,24 @@ func TestCreateServices(t *testing.T) {
 				t.Errorf("%s: expected:\n%#v\ngot:\n%#v", tc.name, tc.expected, service)
 			}
 		})
+	}
+}
+
+func TestCreateServiceWithNamespace(t *testing.T) {
+	svcName := "test-service"
+	ns := "test"
+	tf := cmdtesting.NewTestFactory().WithNamespace(ns)
+	defer tf.Cleanup()
+
+	tf.ClientConfigVal = &restclient.Config{}
+
+	ioStreams, _, buf, _ := genericiooptions.NewTestIOStreams()
+	cmd := NewCmdCreateServiceClusterIP(tf, ioStreams)
+	cmd.Flags().Set("dry-run", "client")
+	cmd.Flags().Set("output", "jsonpath={.metadata.namespace}")
+	cmd.Flags().Set("clusterip", "None")
+	cmd.Run(cmd, []string{svcName})
+	if buf.String() != ns {
+		t.Errorf("expected output: %s, but got: %s", ns, buf.String())
 	}
 }
