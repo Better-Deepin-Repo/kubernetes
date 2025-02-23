@@ -1,5 +1,6 @@
+#!/usr/bin/dh-exec
 _build/bin/kubectl usr/bin/
 
-_build/completion/kubectl/kubectl.bash usr/share/bash-completion/completions/
-_build/completion/kubectl/kubectl.fish usr/share/fish/vendor_completions.d/
-_build/completion/kubectl/kubectl.zsh usr/share/zsh/vendor-completions/
+<!cross> _build/completion/kubectl/kubectl.bash usr/share/bash-completion/completions/
+<!cross> _build/completion/kubectl/kubectl.fish usr/share/fish/vendor_completions.d/
+<!cross> _build/completion/kubectl/kubectl.zsh usr/share/zsh/vendor-completions/
