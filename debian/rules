@@ -1,11 +1,14 @@
 #!/usr/bin/make -f
 
-export DH_VERBOSE = 1
 export GOPATH = $(CURDIR)/.go
 export PATH := /usr/lib/go/bin:$(PATH)
 export CGO_ENABLED = 0
 include /usr/share/dpkg/default.mk
 include /usr/share/dpkg/pkg-info.mk
+
+# Uncomment this to turn on verbose mode.
+# export DH_VERBOSE = 1
+
 
 %:
 	dh $@ --with=bash-completion
