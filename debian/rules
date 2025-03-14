@@ -14,6 +14,18 @@ include /usr/share/dpkg/pkg-info.mk
 	dh $@ --builddirectory=_build --buildsystem=golang
 
 bins = $(shell cut -d " " -f1 debian/*.install | grep "_output/bin" | xargs --max-args=1 basename)
+override_dh_auto_configure:
+	mkdir -pv $(GOPATH)/src/$(DH_GOPKG)
+
+	# Prepare build directory but throw away source directory.
+	DH_GOPKG="__IGNORE__" dh_auto_configure
+
+	$(RM) -r $(GOPATH)/src/$(DH_GOPKG)
+	cp -ra staging/src/k8s.io/kubectl $(GOPATH)/src/$(DH_GOPKG)
+
+	mkdir -pv $(GOPATH)/src/$(DH_GOPKG)/cmd
+	cp -ra cmd/kubectl $(GOPATH)/src/$(DH_GOPKG)/cmd
+
 override_dh_auto_build:
 	mkdir -p .go/src/k8s.io
 	[ -L .go/src/k8s.io/kubernetes ] || ln -s ../../.. .go/src/k8s.io/kubernetes
