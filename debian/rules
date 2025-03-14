@@ -13,7 +13,6 @@ include /usr/share/dpkg/pkg-info.mk
 %:
 	dh $@ --builddirectory=_build --buildsystem=golang
 
-bins = $(shell cut -d " " -f1 debian/*.install | grep "_output/bin" | xargs --max-args=1 basename)
 override_dh_auto_configure:
 	mkdir -pv $(GOPATH)/src/$(DH_GOPKG)
 
@@ -27,17 +26,7 @@ override_dh_auto_configure:
 	cp -ra cmd/kubectl $(GOPATH)/src/$(DH_GOPKG)/cmd
 
 override_dh_auto_build:
-	mkdir -p .go/src/k8s.io
-	[ -L .go/src/k8s.io/kubernetes ] || ln -s ../../.. .go/src/k8s.io/kubernetes
-	env HOME=/home/user make WHAT="$(addprefix cmd/,$(bins) genman)"
-	# bash completion
-	mkdir -p _output/bash-completion
-	_output/bin/kubectl completion bash >_output/bash-completion/kubectl
-	# manpages
-	mkdir -p _output/man
-	echo $(bins) | xargs --max-args=1 env HOME=/home/user _output/bin/genman _output/man
-	# NOTICE files
-	find vendor -name '*NOTICE*' -print0 | xargs -0 head -n1000 >_output/NOTICE
+	dh_auto_build -v -- -ldflags '$(KUBECTL_LDFLAGS)' $(KUBECTL_BUILDMODE)
 
 override_dh_installchangelogs:
 	dh_installchangelogs -X CHANGELOG.md CHANGELOG/CHANGELOG-*.md
