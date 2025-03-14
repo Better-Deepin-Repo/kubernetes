@@ -1,12 +1,12 @@
 #!/usr/bin/make -f
 
-export GOPATH = $(CURDIR)/.go
 include /usr/share/dpkg/default.mk
 include /usr/share/dpkg/pkg-info.mk
 
 # Uncomment this to turn on verbose mode.
 # export DH_VERBOSE = 1
 
+export GOPATH := $(CURDIR)/_build
 # This information can be found consulting the GitHub tags
 # https://github.com/kubernetes/kubernetes/tags
 GIT_COMMIT := a78aa47129b8539636eb86a9d00e31b2720fe06b
