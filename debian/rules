@@ -7,6 +7,9 @@ include /usr/share/dpkg/pkg-info.mk
 # export DH_VERBOSE = 1
 
 export GOPATH := $(CURDIR)/_build
+export DH_GOPKG := k8s.io/kubectl
+export DH_GOLANG_BUILDPKG := "$(DH_GOPKG)/..."
+
 # This information can be found consulting the GitHub tags
 # https://github.com/kubernetes/kubernetes/tags
 GIT_COMMIT := a78aa47129b8539636eb86a9d00e31b2720fe06b
