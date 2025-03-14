@@ -53,3 +53,17 @@ execute_before_dh_installman-arch:
 		-n "Command-line tool for interacting with a Kubernetes cluster's control plane" > debian/kubectl.1
 endif
 
+override_dh_auto_install:
+	# Skip dh_auto_install to stop dh_golang trying to copy bits
+	# for /usr/share/gocode (we use dh_install for that)
+
+ifeq ($(DEB_BUILD_ARCH),$(DEB_HOST_ARCH))
+	mkdir -v -p _build/completion/kubectl
+	_build/bin/kubectl completion bash > _build/completion/kubectl/kubectl.bash
+	_build/bin/kubectl completion fish > _build/completion/kubectl/kubectl.fish
+	_build/bin/kubectl completion zsh > _build/completion/kubectl/kubectl.zsh
+endif
+
+	$(RM)  _build/src/k8s.io/kubectl/pkg/cmd/plugin/testdata/kubectl-create-foo
+	$(RM) -r _build/src/k8s.io/kubectl/.github
+	$(RM) -r _build/src/k8s.io/kubectl/LICENSE
