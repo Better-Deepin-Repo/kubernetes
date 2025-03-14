@@ -5,6 +5,7 @@ export GOPATH = $(CURDIR)/.go
 export PATH := /usr/lib/go/bin:$(PATH)
 export CGO_ENABLED = 0
 include /usr/share/dpkg/default.mk
+include /usr/share/dpkg/pkg-info.mk
 
 %:
 	dh $@ --with=bash-completion
