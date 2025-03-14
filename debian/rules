@@ -7,6 +7,10 @@ include /usr/share/dpkg/pkg-info.mk
 # Uncomment this to turn on verbose mode.
 # export DH_VERBOSE = 1
 
+ifeq (,$(filter $(DEB_BUILD_ARCH), mipsel mips64el))
+KUBECTL_BUILDMODE := -buildmode=pie
+endif
+
 
 %:
 	dh $@ --builddirectory=_build --buildsystem=golang
