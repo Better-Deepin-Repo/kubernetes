@@ -1,3 +1,6 @@
+# kubernetes-client is a transitional package; misc:Depends is not needed.
+kubernetes source: debhelper-but-no-misc-depends kubernetes-client
+
 # For backward compatibility, dh_golang will continue to generate the
 # misc:Built-Using substvar until all Go packages have transitioned to
 # misc:Static-Built-Using.
