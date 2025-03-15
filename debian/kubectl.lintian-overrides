@@ -1,0 +1,5 @@
+# The Static-Built-Using field was introduced from dpkg 1.21.3 for the purpose
+# of listing extra source packages that were used during the build of a binary
+# package. There is currently a proposal at #1069256 to add this field to the
+# Debian Policy. https://salsa.debian.org/lintian/lintian/-/merge_requests/549
+kubectl: unknown-field Static-Built-Using
