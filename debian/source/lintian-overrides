@@ -1,0 +1,5 @@
+# For backward compatibility, dh_golang will continue to generate the
+# misc:Built-Using substvar until all Go packages have transitioned to
+# misc:Static-Built-Using.
+kubernetes source: missing-built-using-field-for-golang-package (in section for kubectl) [debian/control:58]
+kubernetes source: missing-built-using-field-for-golang-package (in section for kubernetes-client) [debian/control:134]
