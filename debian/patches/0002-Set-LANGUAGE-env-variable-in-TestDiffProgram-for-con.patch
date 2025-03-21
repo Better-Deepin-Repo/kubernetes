@@ -1,0 +1,29 @@
+From: Arthur Diniz <arthurbdiniz@gmail.com>
+Date: Fri, 21 Mar 2025 17:28:41 +0000
+Subject: Set LANGUAGE env variable in TestDiffProgram for consistent locale
+ behavior
+
+The Debian Reproducible Builds process fails when the LANGUAGE environment
+variable is set to a value other than English.
+
+This patch updates the TestDiffProgram test to explicitly set the LANGUAGE
+environment variable to en_US, ensuring consistent locale settings during
+test execution and preventing failures caused by locale variations.
+
+Forwarded: https://github.com/kubernetes/kubernetes/pull/130987
+---
+ staging/src/k8s.io/kubectl/pkg/cmd/diff/diff_test.go | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/staging/src/k8s.io/kubectl/pkg/cmd/diff/diff_test.go b/staging/src/k8s.io/kubectl/pkg/cmd/diff/diff_test.go
+index 3919004..78d9346 100644
+--- a/staging/src/k8s.io/kubectl/pkg/cmd/diff/diff_test.go
++++ b/staging/src/k8s.io/kubectl/pkg/cmd/diff/diff_test.go
+@@ -64,6 +64,7 @@ func TestDiffProgram(t *testing.T) {
+ 	externalDiffCommands := [3]string{"diff", "diff -ruN", "diff --report-identical-files"}
+ 
+ 	t.Setenv("LANG", "C")
++	t.Setenv("LANGUAGE", "en_US")
+ 
+ 	for i, c := range externalDiffCommands {
+ 		t.Setenv("KUBECTL_EXTERNAL_DIFF", c)
