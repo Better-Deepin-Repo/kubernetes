@@ -1,0 +1,5 @@
+# false-positive, these are test files.
+golang-k8s-kubectl-dev: package-contains-documentation-outside-usr-share-doc [usr/share/gocode/src/k8s.io/kubectl/pkg/cmd/apply/testdata/prune/simple/manifest1-expected-apply.txt]
+golang-k8s-kubectl-dev: package-contains-documentation-outside-usr-share-doc [usr/share/gocode/src/k8s.io/kubectl/pkg/cmd/apply/testdata/prune/simple/manifest2-expected-apply.txt]
+golang-k8s-kubectl-dev: package-contains-documentation-outside-usr-share-doc [usr/share/gocode/src/k8s.io/kubectl/pkg/cmd/apply/testdata/prune/simple/scenarios/error-on-apply/manifest1-expected-apply.txt]
+golang-k8s-kubectl-dev: package-contains-documentation-outside-usr-share-doc [usr/share/gocode/src/k8s.io/kubectl/pkg/cmd/apply/testdata/prune/simple/scenarios/error-on-apply/manifest2-expected-apply.txt]
