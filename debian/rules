@@ -95,3 +95,11 @@ endif
 	$(RM)  _build/src/k8s.io/kubectl/pkg/cmd/plugin/testdata/kubectl-create-foo
 	$(RM) -r _build/src/k8s.io/kubectl/.github
 	$(RM) -r _build/src/k8s.io/kubectl/LICENSE
+	# Don't install docs in /usr/share/gocode, they are not useful to the users so just remove
+	# them instead of moving to /usr/share/doc:
+	$(RM) _build/src/k8s.io/kubectl/CONTRIBUTING.md
+	$(RM) _build/src/k8s.io/kubectl/README.md
+	$(RM) _build/src/k8s.io/kubectl/code-of-conduct.md
+	$(RM) -r _build/src/k8s.io/kubectl/docs
+	$(RM) _build/src/k8s.io/kubectl/pkg/util/i18n/translations/README.md
+	$(RM) _build/src/k8s.io/kubectl/pkg/cmd/edit/testdata/README
