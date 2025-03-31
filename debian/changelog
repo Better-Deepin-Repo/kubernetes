@@ -1,4 +1,4 @@
-kubernetes (1.32.3+ds-1) UNRELEASED; urgency=medium
+kubernetes (1.32.3+ds-1) unstable; urgency=medium
 
   * New upstream version 1.32.3+ds
   * d/control: Set minimum version (>= 0.32) for Kubernetes dependencies
@@ -8,7 +8,7 @@ kubernetes (1.32.3+ds-1) UNRELEASED; urgency=medium
   * d/s/lintian-overrides: Remove override for missing Built-Using field in
     kubectl section
 
- -- Arthur Diniz <arthurbdiniz@gmail.com>  Sat, 29 Mar 2025 11:48:08 +0000
+ -- Arthur Diniz <arthurbdiniz@gmail.com>  Mon, 31 Mar 2025 21:49:50 +0100
 
 kubernetes (1.31.4+ds-2) unstable; urgency=medium
 
