@@ -7,7 +7,7 @@
 set -euо pipefail
 
 echo "Getting kubectl client version"
-CLIENT_VERSION=$(kubectl version 2>/dev/null | grep 'Client Version' | sed -E 's/.*Client Version: (v[0-9]+\.[0-9]+\.[0-9]+).*/\1/' || true)
+CLIENT_VERSION=$(kubectl version --client | grep 'Client Version' | sed -E 's/.*Client Version: (v[0-9]+\.[0-9]+\.[0-9]+).*/\1/')
 
 echo "Starting Docker service"
 systemctl start docker
