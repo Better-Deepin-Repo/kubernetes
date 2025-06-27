@@ -1,4 +1,4 @@
-kubernetes (1.32.3+ds-2) UNRELEASED; urgency=medium
+kubernetes (1.32.3+ds-2) unstable; urgency=medium
 
   * d/t/kubectl.sh:
     - Redirect stderr to stdout for kind export kubeconfig commands
