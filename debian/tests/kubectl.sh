@@ -4,59 +4,68 @@
 # application, scaling it to two replicas, and then deleting it.
 # Author: Arthur Diniz <arthurbdiniz@gmail.com>
 
-set -euxo pipefail
+set -euо pipefail
 
+echo "Getting kubectl client version"
 CLIENT_VERSION=$(kubectl version 2>/dev/null | grep 'Client Version' | sed -E 's/.*Client Version: (v[0-9]+\.[0-9]+\.[0-9]+).*/\1/' || true)
 
+echo "Starting Docker service"
 systemctl start docker
 
+echo "Creating Kind clusters"
 kind create cluster --name test-cluster-1 --image kindest/node:$CLIENT_VERSION 2>&1
 kind create cluster --name test-cluster-2 --image kindest/node:$CLIENT_VERSION 2>&1
 
+echo "Exporting kubeconfig files"
 kind export kubeconfig --name test-cluster-1 --kubeconfig $HOME/.kube/test-cluster-1-config
 kind export kubeconfig --name test-cluster-2 --kubeconfig $HOME/.kube/test-cluster-2-config
 
+echo "Switching to test-cluster-2 context"
 kubectl config use-context kind-test-cluster-2
 
+echo "Switching to test-cluster-1 context"
 kubectl config use-context kind-test-cluster-1
 
+echo "Getting cluster info"
 kubectl cluster-info
 
-# Check if nodes are available
+echo "Checking available nodes"
 kubectl get nodes
 
-# Create a namespace for testing
+echo "Creating test namespace"
 kubectl create namespace test-ns
 
-# Create a deployment
+echo "Creating nginx deployment"
 kubectl create deployment nginx --image=nginx --namespace=test-ns
 
-# Verify pod is running
+echo "Waiting for deployment to be available"
 kubectl wait --for=condition=available --timeout=60s deployment/nginx -n test-ns
 
-# Expose deployment
+echo "Exposing nginx deployment"
 kubectl expose deployment nginx --port=80 --target-port=80 --type=ClusterIP -n test-ns
 
-# Get logs from the pod
+echo "Getting pod name and logs"
 POD_NAME=$(kubectl get pods -n test-ns -o jsonpath="{.items[0].metadata.name}")
 kubectl logs $POD_NAME -n test-ns
 
-# Execute a command in the pod
+echo "Executing command in pod"
 kubectl exec $POD_NAME -n test-ns -- ls /
 
-# Scale the deployment
+echo "Scaling deployment to 2 replicas"
 kubectl scale deployment nginx --replicas=2 -n test-ns
 kubectl wait --for=condition=available --timeout=60s deployment/nginx -n test-ns
 kubectl get pods -n test-ns
 
-# Delete a pod and check if it restarts
+echo "Deleting pod to test restart"
 kubectl delete pod $POD_NAME -n test-ns
 kubectl get pods -n test-ns
 
-# Delete namespace
+echo "Deleting test namespace"
 kubectl delete namespace test-ns
 
+echo "Deleting Kind clusters"
 kind delete cluster --name test-cluster-1 2>&1
 kind delete cluster --name test-cluster-2 2>&1
 
+echo "Removing Docker image"
 docker rmi kindest/node:$CLIENT_VERSION
