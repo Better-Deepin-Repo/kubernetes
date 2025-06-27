@@ -4,7 +4,7 @@
 # application, scaling it to two replicas, and then deleting it.
 # Author: Arthur Diniz <arthurbdiniz@gmail.com>
 
-set -euо pipefail
+set -euo pipefail
 
 echo "Getting kubectl client version"
 CLIENT_VERSION=$(kubectl version --client | grep 'Client Version' | sed -E 's/.*Client Version: (v[0-9]+\.[0-9]+\.[0-9]+).*/\1/')
@@ -17,8 +17,8 @@ kind create cluster --name test-cluster-1 --image kindest/node:$CLIENT_VERSION 2
 kind create cluster --name test-cluster-2 --image kindest/node:$CLIENT_VERSION 2>&1
 
 echo "Exporting kubeconfig files"
-kind export kubeconfig --name test-cluster-1 --kubeconfig $HOME/.kube/test-cluster-1-config
-kind export kubeconfig --name test-cluster-2 --kubeconfig $HOME/.kube/test-cluster-2-config
+kind export kubeconfig --name test-cluster-1 --kubeconfig $HOME/.kube/test-cluster-1-config 2>&1
+kind export kubeconfig --name test-cluster-2 --kubeconfig $HOME/.kube/test-cluster-2-config 2>&1
 
 echo "Switching to test-cluster-2 context"
 kubectl config use-context kind-test-cluster-2
