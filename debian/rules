@@ -8,7 +8,12 @@ include /usr/share/dpkg/pkg-info.mk
 
 export GOPATH := $(CURDIR)/_build
 export DH_GOPKG := k8s.io/kubectl
-export DH_GOLANG_BUILDPKG := "$(DH_GOPKG)/..."
+export GOTOOLCHAIN := local
+export GOMODCACHE := $(CURDIR)/_build/pkg/mod
+export GOCACHE := $(CURDIR)/_build/gocache
+export GOFLAGS := -mod=mod -buildvcs=false
+export GOWORK := off
+export GOPROXY ?= https://proxy.golang.org,direct
 
 # This information can be found consulting the GitHub tags
 # https://github.com/kubernetes/kubernetes/tags
@@ -20,6 +25,7 @@ DEB_UPSTREAM_MAIN_VERSION := $(shell echo ${DEB_VERSION_UPSTREAM} | sed -e 's/^\
 GIT_MAJOR := $(shell echo $(DEB_UPSTREAM_MAIN_VERSION) | cut -d. -f1)
 GIT_MINOR := $(shell echo $(DEB_UPSTREAM_MAIN_VERSION) | cut -d. -f2)
 GIT_VERSION := v$(DEB_UPSTREAM_MAIN_VERSION)
+K8S_LIB_VERSION := v0.$(shell echo $(DEB_UPSTREAM_MAIN_VERSION) | cut -d. -f2,3)
 
 DATE_FMT = +%Y-%m-%dT%H:%M:%SZ
 ifdef SOURCE_DATE_EPOCH
@@ -53,22 +59,34 @@ endif
 
 
 %:
-	dh $@ --builddirectory=_build --buildsystem=golang
+	dh $@
+
+override_dh_auto_clean:
+	chmod -R u+w _build 2>/dev/null || true
+	$(RM) -r _build
 
 override_dh_auto_configure:
-	mkdir -pv $(GOPATH)/src/$(DH_GOPKG)
-
-	# Prepare build directory but throw away source directory.
-	DH_GOPKG="__IGNORE__" dh_auto_configure
-
-	$(RM) -r $(GOPATH)/src/$(DH_GOPKG)
-	cp -ra staging/src/k8s.io/kubectl $(GOPATH)/src/$(DH_GOPKG)
+	mkdir -pv $(GOPATH)/src/k8s.io
+	cp -ra staging/src/k8s.io/. $(GOPATH)/src/k8s.io/
 
 	mkdir -pv $(GOPATH)/src/$(DH_GOPKG)/cmd
 	cp -ra cmd/kubectl $(GOPATH)/src/$(DH_GOPKG)/cmd
 
+	sed -i '/^replace (/,/^)/d' $(GOPATH)/src/$(DH_GOPKG)/go.mod
+	sed -i 's|k8s\.io/\([a-z-]*\) v0\.0\.0$$|k8s.io/\1 $(K8S_LIB_VERSION)|' $(GOPATH)/src/$(DH_GOPKG)/go.mod
+
 override_dh_auto_build:
-	dh_auto_build -v -- -ldflags '$(KUBECTL_LDFLAGS)' $(KUBECTL_BUILDMODE)
+	mkdir -pv $(CURDIR)/_build/bin
+	cd $(GOPATH)/src/$(DH_GOPKG) && \
+	go build -v -trimpath -o $(CURDIR)/_build/bin/ \
+		-ldflags '$(KUBECTL_LDFLAGS)' $(KUBECTL_BUILDMODE) ./...
+
+override_dh_auto_test:
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+	cd $(GOPATH)/src/$(DH_GOPKG) && go test ./...
+endif
+
+override_dh_dwz:
 
 override_dh_installchangelogs:
 	dh_installchangelogs -X CHANGELOG.md CHANGELOG/CHANGELOG-*.md
@@ -82,8 +100,6 @@ execute_before_dh_installman-arch:
 endif
 
 override_dh_auto_install:
-	# Skip dh_auto_install to stop dh_golang trying to copy bits
-	# for /usr/share/gocode (we use dh_install for that)
 
 ifeq ($(DEB_BUILD_ARCH),$(DEB_HOST_ARCH))
 	mkdir -v -p _build/completion/kubectl
